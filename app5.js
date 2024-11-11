@@ -66,4 +66,43 @@ app.get("/janken", (req, res) => {
   res.render( 'janken', display );
 });
 
+app.get("/uranai", (req, res) => {
+  let mind = req.query.mind;
+  console.log( {mind});
+  const num = Math.floor( Math.random() * 8 + 1 );
+  let cpu = '';
+  if( num==1 ) cpu = '★★★★★';
+  else if( num==2 ) cpu = '★★★★☆';
+  else if( num==3 ) cpu = '★★★☆☆';
+  else if( num==4 ) cpu = '★★☆☆☆';
+  else if( num==5 ) cpu = '★★☆☆☆';
+  else if( num==6 ) cpu = '★☆☆☆☆';
+  else if( num==7 ) cpu = '★☆☆☆☆';
+  else cpu = '★☆☆☆☆';
+  
+  let judgement = '';
+
+  if (num==1){
+    judgement = '超ラッキー！';
+  } else if (num==2){
+    judgement = 'ラッキー';
+  } else if (num==3){
+  judgement = 'まあまあ';
+  } else if (num==4 || num==5){
+  judgement = 'ビミョー！';
+  } else{
+  judgement = '残念、気を付けて！';
+  }
+  
+  const display = {
+    your: mind,
+    cpu: cpu,
+    judgement: judgement,
+  }
+  res.render( 'uranai', display );
+});
+
+
+
+
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
