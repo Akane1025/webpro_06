@@ -66,41 +66,83 @@ app.get("/janken", (req, res) => {
   res.render( 'janken', display );
 });
 
-app.get("/uranai", (req, res) => {
-  let mind = req.query.mind;
-  console.log( {mind});
-  const num = Math.floor( Math.random() * 8 + 1 );
+
+app.get("/hoi", (req, res) => {
+  let dire = req.query.dire;
+  let win = Number( req.query.win ) || 0;
+  let total = Number( req.query.total ) || 0;
+  console.log( {dire, win, total});
+  const num = Math.floor( Math.random() * 4 + 1 );
   let cpu = '';
-  if( num==1 ) cpu = '★★★★★';
-  else if( num==2 ) cpu = '★★★★☆';
-  else if( num==3 ) cpu = '★★★☆☆';
-  else if( num==4 ) cpu = '★★☆☆☆';
-  else if( num==5 ) cpu = '★★☆☆☆';
-  else if( num==6 ) cpu = '★☆☆☆☆';
-  else if( num==7 ) cpu = '★☆☆☆☆';
-  else cpu = '★☆☆☆☆';
-  
+  if( num==1 ) cpu = '右';
+  else if( num==2 ) cpu = '左';
+  else if( num==3 ) cpu = '上';
+  else cpu = '下';
+
   let judgement = '';
 
-  if (num==1){
-    judgement = '超ラッキー！';
-  } else if (num==2){
-    judgement = 'ラッキー';
-  } else if (num==3){
-  judgement = 'まあまあ';
-  } else if (num==4 || num==5){
-  judgement = 'ビミョー！';
-  } else{
-  judgement = '残念、気を付けて！';
+  if  (dire === cpu){
+    judgement = '勝ち';
+    win += 1;
+  } else {
+    judgement = '負け';
   }
   
+  total += 1;
   const display = {
-    your: mind,
+    your: dire,
     cpu: cpu,
     judgement: judgement,
+    win: win,
+    total: total
   }
-  res.render( 'uranai', display );
+  res.render( 'hoi', display );
 });
+
+
+app.get("/uranai", (req, res) => {
+  const birth = req.query.date;
+  const date = new Date(birth);
+  const month = date.getMonth() + 1;
+  const Dates = date.getDate() + 1;
+  const kekka = month + Dates;
+
+  if (kekka<5){
+      result = "赤い服を着ると良いことあるかも！";
+} else if (kekka<10){
+      result = "今日は早めに寝ると吉";
+} else if (kekka<15){
+      result = "うまくいかないのでゆっくりしよう";
+} else if (kekka<20){
+      result = "牛乳を飲むと金運アップかも？";
+} else if (kekka<25){
+      result = "感謝を伝えると運気アップ";
+} else if (kekka<30){
+      result = "チョコレートを食べると勉強運アップ";
+} else if (kekka<35){
+      result = "外に出かけると最高の出会いがあるかも！";
+} else if (kekka<40){
+      result = "ついてないかも、黄色いハンカチで運気を上げよう";
+} else{
+      result = "超ラッキー！何でもうまくいきそう！";
+}
+
+
+const display = {
+  your: birth,
+  result: result,
+  date: date,
+  month: month,
+  Dates: Dates,
+  kekka:kekka
+}
+
+  // 結果を表示
+  res.render("uranai", display);
+
+
+});
+
 
 
 

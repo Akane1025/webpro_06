@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>あっち向いてホイ</title>
+</head>
+<body>
+    <p>あなたの選んだ方向は<%= your %>です．</p>
+    <p>コンピュータは<%= cpu %>を向きました．</p>
+    <p>判定：<%= judgement %></p>
+    <p>現在<%= total %>試合中<%= win %>勝しています．</p>
+    <hr>
+    <form action="/hoi">
+        <input type="text" name="dire" required>
+        <label for="dire">コンピューターはどっちを向くと思う？漢字で入力してください</label>
+        <input type="hidden" name="win" value="<%= win %>">
+        <input type="hidden" name="total" value="<%= total %>">
+        <input type="submit" value="ホイ!!">
+    </form>   
+</body>
+</html>

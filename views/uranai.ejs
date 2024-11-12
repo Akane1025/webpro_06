@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>本日の占い</title>
+</head>
+<body>
+  <p>あなたの誕生日は<%= month %>月<%= Dates%>日です．</p>
+  <p>今日の運勢は<%= result %>です．</p>
+  <hr>
+  <form action="/uranai" method="get">
+      年月日<input type="date" name="date" id="date"><br>
+      <label for="date">誕生日を入力してください</label>
+      <input type="submit" value="占う">
+  </form>
+</body>
+</html>
+
