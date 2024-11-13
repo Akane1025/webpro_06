@@ -23,6 +23,10 @@ app.get("/luck", (req, res) => {
   let luck = '';
   if( num==1 ) luck = '大吉';
   else if( num==2 ) luck = '中吉';
+  else if( num==3 ) luck = '吉';
+  else if( num==4 ) luck = '小吉';
+  else if( num==5 ) luck = '末吉';
+  else if( num==6 ) luck = '凶';
   console.log( 'あなたの運勢は' + luck + 'です' );
   res.render( 'luck', {number:num, luck:luck} );
 });
@@ -67,44 +71,11 @@ app.get("/janken", (req, res) => {
 });
 
 
-app.get("/hoi", (req, res) => {
-  let dire = req.query.dire;
-  let win = Number( req.query.win ) || 0;
-  let total = Number( req.query.total ) || 0;
-  console.log( {dire, win, total});
-  const num = Math.floor( Math.random() * 4 + 1 );
-  let cpu = '';
-  if( num==1 ) cpu = '右';
-  else if( num==2 ) cpu = '左';
-  else if( num==3 ) cpu = '上';
-  else cpu = '下';
-
-  let judgement = '';
-
-  if  (dire === cpu){
-    judgement = '勝ち';
-    win += 1;
-  } else {
-    judgement = '負け';
-  }
-  
-  total += 1;
-  const display = {
-    your: dire,
-    cpu: cpu,
-    judgement: judgement,
-    win: win,
-    total: total
-  }
-  res.render( 'hoi', display );
-});
-
-
 app.get("/uranai", (req, res) => {
   const birth = req.query.date;
   const date = new Date(birth);
   const month = date.getMonth() + 1;
-  const Dates = date.getDate() + 1;
+  const Dates = date.getDate() ;
   const kekka = month + Dates;
 
   if (kekka<5){
@@ -137,10 +108,42 @@ const display = {
   kekka:kekka
 }
 
-  // 結果を表示
   res.render("uranai", display);
 
 
+});
+
+
+app.get("/hoi", (req, res) => {
+  const dire = req.query.radio;
+  let win = Number( req.query.win ) || 0;
+  let total = Number( req.query.total ) || 0;
+  console.log( {dire, win, total});
+  const num = Math.floor( Math.random() * 4 + 1 );
+  let cpu = '';
+  if( num==1 ) cpu = '右';
+  else if( num==2 ) cpu = '左';
+  else if( num==3 ) cpu = '上';
+  else cpu = '下';
+
+  let judgement = '';
+
+  if  (dire === cpu){
+    judgement = '勝ち';
+    win += 1;
+  } else {
+    judgement = '負け';
+  }
+  
+  total += 1;
+  const display = {
+    your: dire,
+    cpu: cpu,
+    judgement: judgement,
+    win: win,
+    total: total
+  }
+  res.render( 'hoi', display );
 });
 
 

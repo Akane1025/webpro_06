@@ -5,17 +5,22 @@
     <title>あっち向いてホイ</title>
 </head>
 <body>
-    <p>あなたの選んだ方向は<%= your %>です．</p>
+    <p>あなたは<%= your %>を選びました．</p>
     <p>コンピュータは<%= cpu %>を向きました．</p>
     <p>判定：<%= judgement %></p>
     <p>現在<%= total %>試合中<%= win %>勝しています．</p>
     <hr>
-    <form action="/hoi">
-        <input type="text" name="dire" required>
-        <label for="dire">コンピューターはどっちを向くと思う？漢字で入力してください</label>
+    <form action="/hoi" method="get">
+        <p>コンピューターはどっちを向くと思う？<p>
+        <input type="radio" name="radio" id="radio1" value="右">
+        <label for="radio1">右</label><br>
+        <input type="radio" name="radio" id="radio2" value="左">
+        <label for="radio1">左</label><br>
+        <input type="radio" name="radio" id="radio3" value="上">
+        <label for="radio1">上</label><br>
+        <input type="radio" name="radio" id="radio4" value="下">
+        <label for="radio1">下</label><br>
         <input type="hidden" name="win" value="<%= win %>">
         <input type="hidden" name="total" value="<%= total %>">
-        <input type="submit" value="ホイ!!">
-    </form>   
-</body>
-</html>
+        <input type="submit" value="ホイ！！">
+    </form>
