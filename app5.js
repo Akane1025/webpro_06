@@ -99,6 +99,7 @@ app.get("/uranai", (req, res) => {
 }
 
 
+
 const display = {
   your: birth,
   result: result,
