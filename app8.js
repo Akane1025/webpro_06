@@ -82,52 +82,55 @@ app.post("/add", (req, res) => {
   res.json( {answer: num1+num2} );
 });
 
-// これより下はBBS関係
-app.post("/check", (req, res) => {
-  // 本来はここでDBMSに問い合わせる
-  res.json( {number: bbs.length });
+
+
+
+app.get("/kadai", (req, res) => {
+  console.log("GET /kadai");
+  res.json({ test: "GET /kadai" });
 });
 
-app.post("/read", (req, res) => {
-  // 本来はここでDBMSに問い合わせる
-  const start = Number( req.body.start );
-  console.log( "read -> " + start );
-  if( start==0 ) res.json( {messages: bbs });
-  else res.json( {messages: bbs.slice( start )});
+app.post("/kadai", (req, res) => {
+  console.log("POST /kadai");
+  res.json({ test: "POST /kadai" });
 });
 
-app.post("/post", (req, res) => {
-  const name = req.body.name;
-  const message = req.body.message;
-  console.log( [name, message] );
-  // 本来はここでDBMSに保存する
-  bbs.push( { name: name, message: message } );
-  res.json( {number: bbs.length } );
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+let messages = []; // メモリ上の簡易データベース
+
+// データを保存
+app.post('/post', (req, res) => {
+  const { name, message, date, place } = req.body;
+  if (!name || !message || !date || !place) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  messages.push({ name, message, date, place });
+  console.log('Message received:', { name, message, date, place });
+  res.json({ success: true });
 });
 
-app.get("/bbs", (req,res) => {
-    console.log("GET /BBS");
-    res.json( {test: "GET /BBS" });
+// 新しいメッセージを取得
+app.post('/read', (req, res) => {
+  const { start } = req.body;
+  const startIndex = isNaN(parseInt(start, 10)) ? 0 : parseInt(start, 10);  
+  console.log('Fetching messages starting from index:', startIndex); // デバッグ用ログ
+  
+  if (startIndex < 0 || startIndex >= messages.length) {
+    return res.json({ messages: [] });
+  }
+  const newMessages = messages.slice(startIndex);
+  console.log('New messages:', newMessages);
+
+  res.json({ messages: newMessages, totalCount: messages.length });
 });
 
-app.post("/bbs", (req,res) => {
-    console.log("POST /BBS");
-    res.json( {test: "POST /BBS"});
-})
 
-app.get("/bbs/:id", (req,res) => {
-    console.log( "GET /BBS/" + req.params.id );
-    res.json( {test: "GET /BBS/" + req.params.id });
+// 新しいメッセージがあるか確認
+app.post('/check', (req, res) => {
+  res.json({ number: messages.length });
 });
 
-app.put("/bbs/:id", (req,res) => {
-    console.log( "PUT /BBS/" + req.params.id );
-    res.json( {test: "PUT /BBS/" + req.params.id });
-});
-
-app.delete("/bbs/:id", (req,res) => {
-    console.log( "DELETE /BBS/" + req.params.id );
-    res.json( {test: "DELETE /BBS/" + req.params.id });
-});
-
-app.listen(8080, () => console.log("Example app listening on port 8080!"));
+app.listen(8080, () => console.log('Example app listening on port 8080!'));

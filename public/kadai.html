@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訪問介護事業所のヒヤリ・ハット事例管理</title>
+    <script src="./kadai.js" defer></script>
+    <link rel="stylesheet" href="./kadai.css">
+</head>
+<body>
+    <div id="bbs"></div>
+    <div>
+        <label for="name">記入者：</label>
+        <input type="text" id="name">
+        <label for="date">日付：</label>
+        <input type="date" name="date" id="date"><br>
+        <label for="place">場所：</label>
+        <input type="text" id="place">
+        <label for="message">事例：</label>
+        <input type="text" id="message">
+        <button type="button" id="post">送信</button>
+    </div>
+    <div id="preview"></div> <!-- 入力内容のプレビューを表示 -->
+</body>
+</html>
