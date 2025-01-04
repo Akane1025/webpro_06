@@ -100,6 +100,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 let messages = []; // メモリ上の簡易データベース
+const locationData = {}; // 場所ごとの集計データを保持
 
 // データを保存
 app.post('/post', (req, res) => {
@@ -109,28 +110,64 @@ app.post('/post', (req, res) => {
   }
   messages.push({ name, message, date, place });
   console.log('Message received:', { name, message, date, place });
+  
+  // 場所データを更新
+  if (!locationData[place]) {
+    locationData[place] = 0;
+  }
+  locationData[place]++;
+
   res.json({ success: true });
 });
 
-// 新しいメッセージを取得
+// メッセージ削除処理
+app.post('/delete', (req, res) => {
+  const { message, date, place } = req.body;
+
+  // メッセージ配列から一致するメッセージを削除
+  messages = messages.filter((msg) => !(msg.message === message && msg.date === date && msg.place === place));
+
+  console.log('Deleted message:', { message, date, place });
+
+  // 削除後、グラフの場所データを再集計
+  if (locationData[place]) {
+    locationData[place]--;
+    if (locationData[place] <= 0) {
+      delete locationData[place]; // カウントが0以下の場合、場所データを削除
+    }
+  }
+
+  res.json({ success: true });
+});
+
+// 新しいメッセージを取得（オプションで日付でフィルタ）
 app.post('/read', (req, res) => {
-  const { start } = req.body;
-  const startIndex = isNaN(parseInt(start, 10)) ? 0 : parseInt(start, 10);  
-  console.log('Fetching messages starting from index:', startIndex); // デバッグ用ログ
-  
+  const { start, date } = req.body;
+  const startIndex = isNaN(parseInt(start, 10)) ? 0 : parseInt(start, 10);
+  console.log('Fetching messages starting from index:', startIndex, 'with date filter:', date); // デバッグ用ログ
+
   if (startIndex < 0 || startIndex >= messages.length) {
     return res.json({ messages: [] });
   }
-  const newMessages = messages.slice(startIndex);
-  console.log('New messages:', newMessages);
 
-  res.json({ messages: newMessages, totalCount: messages.length });
+  let filteredMessages = messages.slice(startIndex); // 開始位置以降のメッセージを取得
+
+  // 日付フィルタが存在する場合、メッセージを日付でフィルタリング
+  if (date) {
+    filteredMessages = filteredMessages.filter((message) => {
+      return message.date === date; // 日付が一致するメッセージのみ
+    });
+  }
+
+  console.log('Filtered messages:', filteredMessages);
+
+  res.json({ messages: filteredMessages, totalCount: messages.length });
 });
-
 
 // 新しいメッセージがあるか確認
 app.post('/check', (req, res) => {
   res.json({ number: messages.length });
 });
+
 
 app.listen(8080, () => console.log('Example app listening on port 8080!'));

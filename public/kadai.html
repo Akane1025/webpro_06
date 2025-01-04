@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訪問介護事業所のヒヤリ・ハット事例管理</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
     <script src="./kadai.js" defer></script>
     <link rel="stylesheet" href="./kadai.css">
 </head>
@@ -19,7 +20,12 @@
         <label for="message">事例：</label>
         <input type="text" id="message">
         <button type="button" id="post">送信</button>
+        <label for="dateFilter">日付フィルター:</label>
+        <input type="date" id="dateFilter" />
+        <button id="filterButton">フィルタ</button>
     </div>
-    <div id="preview"></div> <!-- 入力内容のプレビューを表示 -->
+    <div id="divider"></div>
+
+    <canvas id="chart" width="400" height="400"></canvas>
 </body>
 </html>
