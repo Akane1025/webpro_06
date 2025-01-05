@@ -85,11 +85,6 @@ app.post("/add", (req, res) => {
 
 
 
-app.get("/kadai", (req, res) => {
-  console.log("GET /kadai");
-  res.json({ test: "GET /kadai" });
-});
-
 app.post("/kadai", (req, res) => {
   console.log("POST /kadai");
   res.json({ test: "POST /kadai" });
